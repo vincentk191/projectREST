@@ -1,0 +1,25 @@
+extends layout.pug
+
+block content
+   .menu
+      .left
+         .subnav
+            ul
+               li Snacks
+               li Breakfast
+               li Lunch
+               li 
+               li Drinks
+         .arrows
+            a
+            a
+         .entries
+            ul
+               if menu
+                  each food in menu
+                     li= food
+      .right 
+         // Background should be a slideshow of other cards as a form of recommendation
+         .menucards
+            img
+            p
