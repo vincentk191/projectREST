@@ -1,27 +1,36 @@
-const fs = require('fs');
+//-----------------DEPENDENCIES------------------
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 const Sequelize = require('sequelize');
-const fileName = 'file.something'
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const model = require('./models');
 
+//-----------------CONFIGURATION------------------
 const app = express();
+const portID = process.env.PORT || 3000;
 
-// const sequelize = new Sequelize ('restMenu',process.env.POSTGRES_USER,null,{
-//    host: 'localhost',
-//    dialect: 'postgres'
-// });
-
-app.use(express.static('public'));
 app.use(bodyParser.urlencoded({
    extended: false
 }));
+//-----------------SESSION STORE-------------------
+app.use(session({
+   store: new SequelizeStore({
+      db: model.sequelize,
+      checkExpirationInterval: 15 * 60 * 1000, // The interval at which to cleanup expired sessions in milliseconds.
+      expiration: 60 * 60 * 1000 // The maximum age (in milliseconds) of a valid session.
+   }),
+   secret: "safe",
+   saveUnitialized: false,
+   resave: false
+}))
 
+//--------------------ROUTES-----------------------
 app.set('view engine', 'pug');
+app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-   res.render('index');
-});
+app.use(require('./server/routes'));
 
-var server = app.listen(3000, () => {
-   console.log(`Server's working just fine on port 3001!`);
+app.listen(portID, () => {
+   console.log(`Server's working just fine on port 3000!`);
 });

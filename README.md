@@ -1,44 +1,52 @@
 # Project: RESTaurant
 
-To inform users of the product/service in a clear, comfortable and concise manner.
+A template that I had hoped would aid me in constructing a web shop for specifically customers in the food industry in promoting
+their goods. I had chosen this as there was a request from a family member in producing a web shop however due to the request itself
+being too vague, I will be using a series of random menus to simply display the functionality of the app.
 
 ## General Information
 
-- What is the problem you are trying to solve?
-Enabling PayPal and Google maps API to improve user experience.
+As mentioned above, the project will be a template for me to work on. It will be a project I expect to use in my portfolio when displaying my abilities. It will be constructed in a modular fashion as to allow it to be easily modified to different customers however unique enough that it will allow personalisation efficient and straight forward.
 
-- Who is your target audience?
-The general public, however more so college students and working adults.
+### Timeline
+_10/12/2017_
+- Establish a clear objective as well as essential and optional features
+Look into webpack and if it is able to launch both react and node with ease.
+(Depending on my understanding, I will decide whether to construct the app with
+NodeJS/jQuery/Express/Sequelize or NodeJS/ReactJS/Express/Sequelize)
 
-- What are your specific goals?
-To display what I have learned and what I can learn.
+_11/12/2017_
+- Setting up the basic structure
+    - Server routes
+    - Database models
+    - Database functions
+    - Pug pages
 
-- What is your business model? Where is your revenue coming from?
+_12/12/2017_
+- Read up and incorporate the shopping cart as well as the paypal API.
 
-- What are the costs of your business?
+_13/12/2017_
+- Add the extended functionalities if all else is completed
 
-### Market research:
-- Who is your current competition?
-
-- How is your product different from currently available competitors?
-
-- What is the current supply / demand for your product?
+_14/12/2017 - 15/12/2017_
+- CSS
+- Finishing touches
 
 ### Technical Specifications:
-- What data will you need to store? How will it be organized? Describe each table, its columns, and its relationships with other tables.
 
-- What does your product look like? List each view, their purpose, and how they work
+- Display different items under different categories
+- Add items to the cart as well as making the purchase
+- Placing the order, which will return an alert from the admin side(Or send the order to the an email address)
 
-- Describe any complex business logic that is happening in your application. For example, how does data flow through your application
+### Complications
 
-Have a timeline of milestones to reach, including deadlines:
-- Create milestones that represent the discrete blocks of functionality.
-
-- Give an estimate for how long each will take per engineer.
-
-- Determine whether things can be built concurrently.
-
-- Come up with a timeline of goals to stick to.
+- I would like to incorporate a sophisticated filter functionality, similar to that of pinterest.
+    -   A main filter and then with each added filter a narrowed down list will be passed down that will be displayed.
+- If possible, I would like to extend its functionalities if there is time.
+    - Login
+    - Users will have feedback privileges
+    - Admins may remove or add items to the menu
+    - What data will you need to store? How will it be organised? Describe each table, its columns, and its relationships with other tables.
 
 ## Authors
 

@@ -4,7 +4,9 @@
   "description": "One Paragraph of project description goes here",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "node-sass-chokidar src/scss/ -o src/css/",
+    "watch-css": "npm run build-css && node-sass-chokidar src/scss/ -o src/css/ --watch --recursive"
   },
   "author": "Vincent.K",
   "license": "ISC",
