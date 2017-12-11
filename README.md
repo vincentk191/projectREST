@@ -26,7 +26,7 @@ _12/12/2017_
 - Read up and incorporate the shopping cart as well as the paypal API.
 
 _13/12/2017_
-- Add the extended functionalities if all else is completed
+- Add the extended functionalities if all else is completed as well as jQuery for front-end
 
 _14/12/2017 - 15/12/2017_
 - CSS
