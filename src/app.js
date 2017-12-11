@@ -25,7 +25,7 @@ app.use(session({
    resave: false
 }))
 
-//--------------------ROUTES-----------------------
+//--------------------ROUTES----------------------
 app.set('view engine', 'pug');
 app.use(express.static('public'));
 

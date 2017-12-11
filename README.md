@@ -47,6 +47,7 @@ _14/12/2017 - 15/12/2017_
     - Users will have feedback privileges
     - Admins may remove or add items to the menu
     - What data will you need to store? How will it be organised? Describe each table, its columns, and its relationships with other tables.
+- Id = 1, will be assumed as admin and will have access to editing everything in the database with the option of granting moderator privileges to allow a more independent take on editing the menu.
 
 ## Authors
 

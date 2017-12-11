@@ -1,5 +1,5 @@
 module.exports = (sequelize, Datatypes) => {
-    const Menu = sequelize.define('Menu', {
+    const Category = sequelize.define('Category', {
         name: {
             type: Datatypes.STRING,
             unique: true,
@@ -7,10 +7,11 @@ module.exports = (sequelize, Datatypes) => {
         }
     });
 
-    Menu.associate = (models) => {
-        Menu.hasmany(models.Category, {
+    Category.associate = (models) => {
+        Category.belongsTo(models.Menu, {
             foreignKey: 'categoryId',
-            as: 'Category'
+            as: 'Menu',
+            onDelete: 'CASCADE'
         });
     };
 }
