@@ -3,7 +3,13 @@ module.exports = (sequelize, Datatypes) => {
         username: {
             type: DataTypes.TEXT,
             allowNull: false,
-            unique: true
+            unique: true,
+            validate: {
+                len: {
+                    args: 5,
+                    msg: "Username must be 5 characters in length"
+                }
+            }
         },
         email: {
             type: DataTypes.TEXT,

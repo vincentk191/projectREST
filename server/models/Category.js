@@ -10,7 +10,6 @@ module.exports = (sequelize, Datatypes) => {
     Category.associate = (models) => {
         Category.belongsTo(models.Menu, {
             foreignKey: 'categoryId',
-            as: 'Menu',
             onDelete: 'CASCADE'
         });
     };
