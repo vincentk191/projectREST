@@ -6,7 +6,8 @@ const Categroy = require('../controllers').Category;
 const bcrypt = require('bcrypt')
 
 router.get('/', (req, res) => {
-    console.log(req.session.user);
+    console.log("user", req.session.user);
+    console.log("cart", req.session.cart);
     let page = {};
     if (!req.session.cart) {
         req.session.cart = {
@@ -48,21 +49,18 @@ router.get('/myCart', (req,res) => {
 })
 
 router.get('/clearCart', (req,res) => {
-    req.session.cart = {};
-    console.log("hello", req.session.cart);
-
-    res.render('home');
+    req.session.cart = undefined;
+    res.redirect('/')
 })
 
 //-----------------FORM ROUTES------------------
 
 router.get('/logout', (req,res) => {
-    req.session.destroy;
+    req.session.user = undefined;
     res.redirect('/');
 })
 
 router.get('/:form', (req, res) => {
-    console.log(req.session.user);
     let page = {};
 
     const form = [{
@@ -96,7 +94,6 @@ router.get('/:form', (req, res) => {
 })
 
 router.post('/register', (req, res) => {
-    console.log(req.query.message);
     const form = {
         username: req.body.username,
         email: req.body.email,
@@ -128,10 +125,12 @@ router.post('/login', (req, res) => {
                         req.session.user = user;
                         res.redirect('/');
                     } else {
-                        res.status(400).redirect(`/login`)
+                        res.status(400).redirect(`/login?message=Invalid Username or Password`)
                     }
 
                 });
+            } else {
+                res.status(400).redirect(`/login?message=Invalid Username or Password`)
             }
         })
         .catch(err => res.status(400).redirect(`/login`));
