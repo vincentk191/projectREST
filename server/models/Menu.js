@@ -1,19 +1,17 @@
-module.exports = (sequelize, Datatypes) => {
+const model = require('./');
+
+module.exports = (sequelize, DataTypes) => {
     const Menu = sequelize.define('Menu', {
         name: {
-            type: Datatypes.STRING,
+            type: DataTypes.STRING,
             unique: true,
             allowNull: false
         },
         price: {
-            type: Datatypes.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false
         }
     });
 
-    Menu.associate = (models) => {
-        Menu.hasmany(models.Category, {
-            foreignKey: 'categoryId'
-        });
-    };
+    return Menu
 }

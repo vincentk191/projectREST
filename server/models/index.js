@@ -1,42 +1,19 @@
-const fs = require('fs');
-const path = require('path');
 const Sequelize = require('sequelize');
-const basename = path.basename(module.filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(`${__dirname}/../config/config.json`)[env];
-const db = {};
+const sequelize = new Sequelize(config.use_env_variable || process.env.DATABASE_URL);
 
-let sequelize;
+const Category = sequelize.import('./Category.js');
+const Menu = sequelize.import('./Menu.js');
+const User = sequelize.import('./User.js');
 
-if (config.use_env_variable) {
-    sequelize = new Sequelize(process.env[config.use_env_variable]);
-} else {
-    sequelize = new Sequelize(
-        config.database, config.username, config.password, config
-    );
-}
+Category.belongsTo(Menu, {onDelete: 'CASCADE' });
+Menu.hasMany(Category, {onDelete: 'CASCADE' });
 
-fs
-    .readdirSync(__dirname)
-    .filter(file =>
-        (file.indexOf('.') !== 0)
-            && (file !== basename)
-            && (file.slice(-3) === '.js'))
-    .forEach(file => {
-        const model = sequelize.import(path.join(__dirname, file));
+sequelize.sync({ force: false });
 
-        db[model.name] = model;
-    });
-
-Object.keys(db).forEach(modelName => {
-    if (db[modelName].associate) {
-        db[modelName].associate(db);
-    }
-});
-
-sequelize.sync();
-
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-module.exports = db;
+exports.Category = Category;
+exports.Menu = Menu;
+exports.User = User;
+exports.sequelize = sequelize;
+exports.Sequelize = Sequelize;

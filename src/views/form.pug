@@ -1,0 +1,23 @@
+extends layout.pug
+
+block index
+    #form
+        h1= pageName
+        form(action=`/${form}` method="")
+            if input1 
+                input(type=input1 name="username" placeholder="Username" required)
+                    
+            if input2
+                input(type=input2 name="email" placeholder="Email" required)
+                    
+            if input3
+                input(type=input3 name="password" placeholder="Password" required)
+                    
+            if input4
+                input(type=input4 name="passwordConf" placeholder="Confirm Password" required)
+            button(type="submit") Submit
+                
+        a(href=`/${href}`) #{linkName}
+        br
+        a(href='/') Home
+                        

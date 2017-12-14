@@ -1,0 +1,26 @@
+extends layout.pug
+
+block content
+    .slideshow
+        img(src='images/ss1.jpeg')
+        img(src='images/ss1.jpeg')
+        img(src='images/ss1.jpeg')
+    #bio
+        p
+    #menu
+        table
+            thead.thead-dark
+                tr(style='font-size:20px')
+                    th No.
+                    th
+                    th Price
+            tbody
+                if menu
+                    each entry in menu
+                        tr.table-active
+                            td 
+                                p #{entry.id}
+                            td 
+                                p #{entry.name}
+                            td
+                                p $#{entry.price}

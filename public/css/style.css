@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+    background-color: tomato;
+    color: white;
+    font-family: "Arial", serif;
+}
+
+ul.navigation {
+    text-align: center;
+}
+
+#form {
+    position: relative;
+    font-size: 1.2rem;
+    margin: auto;
+    width: 50%;
+    padding: 10rem;
+}
+
+#form input {
+    position: relative;
+}
+
+img {
+    width: 18rem;
+    height: auto;
+}

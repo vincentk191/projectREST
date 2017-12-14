@@ -1,4 +1,6 @@
-module.exports = (sequelize, Datatypes) => {
+const model = require('./');
+
+module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
         username: {
             type: DataTypes.TEXT,
@@ -38,4 +40,6 @@ module.exports = (sequelize, Datatypes) => {
     }, {
         timestamps: false
     });
+
+    return User;
 }

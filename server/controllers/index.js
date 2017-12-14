@@ -1,7 +1,9 @@
-const menu = require('./menu');
-const category = require('./category');
+const Menu = require('./menu');
+// const Category = require('./category');
+const User = require('./user');
 
 module.exports = {
-    menu,
-    category
+    Menu,
+    User,
+    // Category
 }
