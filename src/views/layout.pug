@@ -11,11 +11,11 @@ html
             ul.navigation
                 li
                     a(href="/") Home
-                li
-                    a(href="#menu") Menu 
                 if !user
                     li
                         a(href='/register') Sign Up
+                    li
+                        a(href='/login') Login
                 else 
                     li
                         a(href='/logout') Logout

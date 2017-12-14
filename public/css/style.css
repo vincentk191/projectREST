@@ -26,3 +26,14 @@ img {
     width: 18rem;
     height: auto;
 }
+
+.cart table {
+    text-align: center;
+    border: 1px solid white;
+    border-collapse: collapse;
+
+}
+
+.cart table tbody {
+    border: 1px solid white;
+}

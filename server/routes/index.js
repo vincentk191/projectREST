@@ -5,6 +5,8 @@ const Menu = require('../controllers').Menu;
 const Categroy = require('../controllers').Category;
 const bcrypt = require('bcrypt')
 
+//-----------------HOME ROUTE------------------
+
 router.get('/', (req, res) => {
     console.log("user", req.session.user);
     console.log("cart", req.session.cart);
@@ -12,20 +14,30 @@ router.get('/', (req, res) => {
     if (!req.session.cart) {
         req.session.cart = {
             3: {
-                id: 1,
                 name: "All cheese pizza",
-                price: 11
+                price: 11,
+                count: 1
             },
             4: {
-                id: 2,
                 name: "Heineken Beer",
-                price: 12
+                price: 4,
+                count: 4
             }
         }
     }
     page.user = req.session.user;
     page.cart = req.session.cart;
     page.message = req.query.message;
+    function total( obj ) {
+        let total = 0;
+            for( let el in obj ) {
+                console.log(obj[el].price);
+                total += parseFloat(obj[el].price * obj[el].count);
+            }
+        return total;
+    }
+
+    page.total = total(page.cart);
 
     Menu.entries().then(entry => {
         page.pages = entry.length;
@@ -43,14 +55,71 @@ router.get('/', (req, res) => {
 
 router.get('/myCart', (req,res) => {
     let page = {};
-
     page.cart = req.session.cart
-    res.render('payment')
+
+    function total(obj) {
+        let total = 0;
+            for( let el in obj ) {
+                console.log(obj[el].price);
+                total += parseFloat(obj[el].price * obj[el].count);
+            }
+        return total;
+    }
+
+    page.total = total(page.cart);
+    console.log(page.total);
+
+    res.render('payment', page)
 })
 
 router.get('/clearCart', (req,res) => {
     req.session.cart = undefined;
     res.redirect('/')
+})
+
+//-----------------PROFILE ROUTES------------------
+
+// ADMIN
+router.get('/admin', (req,res) => {
+    let page = {};
+
+    if(req.session.user.username === 'Admin'){
+        res.render('admin');
+    } else {
+        res.redirect('/?message=' + 'You need to be an Admin to access this!')
+    }
+})
+
+router.post('/admin/moderator', (req,res) => {
+    if(req.session.user.username === 'Admin'){
+        res.render('/')
+    }
+})
+
+router.post('/admin/menu', (req,res) => {
+    if(req.session.user.username === 'Admin'){
+        
+    }
+})
+
+router.post('/admin/category', (req,res) => {
+    if(req.session.user.username === 'Admin'){
+        res.render('/')
+    }
+})
+
+// MODERATOR
+router.get('/moderator', (req,res) => {
+
+})
+
+router.post('/moderator', (req,res) => {
+
+})
+
+// PUBLIC
+router.get('/profile/:id', (req,res) => {
+
 })
 
 //-----------------FORM ROUTES------------------
@@ -135,5 +204,6 @@ router.post('/login', (req, res) => {
         })
         .catch(err => res.status(400).redirect(`/login`));
 })
+
 
 module.exports = router;

@@ -3,7 +3,7 @@ extends layout.pug
 block index
     #form
         h1= pageName
-        form(action=`/${form}` method="")
+        form(action=`/${form}` method="post")
             if input1 
                 input(type=input1 name="username" placeholder="Username" required)
                     

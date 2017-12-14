@@ -4,7 +4,7 @@ block content
     .cart
         table
             thead.thead-dark
-                tr(style='font-size:20px')
+                tr
                     th No. of Items
                     th Items
                     th Price
@@ -15,14 +15,15 @@ block content
                             td 
                                 p X #{entry.count}
                             td 
-                                p #{entry.name}
+                                p #{entry.name} ($#{entry.price})
                             td
-                                button(type='button')
-                                    span(position='absolute') ×
-                                p #{entry.body}
-                
-                tr
-                    th
-                        form(action='' method='POST')
-                        input(type='submit' value='Checkout')
+                                p  $#{entry.count * entry.price}
+                    tr
+                        td
+                            p Total
+                        td
+                        td
+                            p $#{total}
+        form(action='' method='POST')
+        input(type='submit' value='Checkout')
                         
