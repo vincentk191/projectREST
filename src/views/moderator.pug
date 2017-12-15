@@ -4,7 +4,7 @@ block content
     #admin
         h1= user.username
         if admin
-            .moderator
+            .moderator.col-sm-12
                 h2 Moderators
                 table.table
                     thead.thead-dark
@@ -20,10 +20,10 @@ block content
                                     td 
                                         p #{moderator.dataValues.username}
                 h5 Add moderator
-                form(action='/edit/moderator' method='POST')
-                    input(type='text' name="name" placeholder='Search user' required autocomplete="off")
-                    input(type='submit')
-        .editMenu
+                form(action='/edit/moderator' method='POST').col-sm-6
+                    input.form-control(type='text' name="name" placeholder='Search user' required autocomplete="off")
+                    button.btn.btn-default(type='submit') Submit
+        .editMenu.col-sm-12
             h2 Menu
             table.table
                 thead.thead-dark
@@ -42,12 +42,12 @@ block content
                                 td
                                     p $#{entry.dataValues.price}
             h5 Add menu
-            form(action='/edit/menu' method='POST')
-                input(type='text' name="name" placeholder='Name' required autocomplete="off")
-                input(type='text' name="price" placeholder='Price' required autocomplete="off")
-                input(type='text' name="category" placeholder='Category' required autocomplete="off")
-                input(type='submit')
-        .editCategory
+            form(action='/edit/menu' method='POST').col-sm-6
+                input.form-control(type='text' name="name" placeholder='Name' required autocomplete="off")
+                input.form-control(type='text' name="price" placeholder='Price' required autocomplete="off")
+                input.form-control(type='text' name="category" placeholder='Category' required autocomplete="off")
+                button.btn.btn-default(type='submit') Submit
+        .editCategory.col-sm-12
             h2 Categories
             table.table
                 thead.thead-dark
@@ -63,6 +63,6 @@ block content
                                 td 
                                     p #{category.dataValues.name}
             h5 Add category
-            form(action='/edit/category' method='POST')
-                input(type='text' name="category" placeholder='Category' required autocomplete="off")
-                input(type='submit')
+            form(action='/edit/category' method='POST').col-sm-6
+                input.form-control(type='text' name="category" placeholder='Category' required autocomplete="off")
+                button.btn.btn-default(type='submit') Submit

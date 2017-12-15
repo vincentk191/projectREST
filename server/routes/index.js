@@ -75,26 +75,13 @@ router.get('/jquery/add', (req,res) => {
     const entryId = req.query.input;
     const count = req.query.count;
 
-    console.log("jquery cart", req.session.cart);
+    Menu.findOne(entryId).then(entry => {
+        let newEntry = Object.assign(entry.dataValues,{count: count})
+        req.session.cart = Object.assign(req.session.cart,{[entryId]: newEntry})
 
-    if (req.session.cart[`${entryId}`]) {
-        // addToCart(entryId,req.session.cart);
-        //
-        // let newEntry = Object.assign(req.session.cart,{count: count})
-        //
-        // req.session.cart = Object.assign(req.session.cart,{[entryId]: newEntry})
-        req.session.cart[`${entryId}`].count++;
-
-        console.log("added to Cart", req.session.cart);
-    } else {
-        Menu.findOne(entryId).then(entry => {
-            let newEntry = Object.assign(entry.dataValues,{count: count})
-            req.session.cart = Object.assign(req.session.cart,{[entryId]: newEntry})
-
-            console.log("hi there", req.session.cart);
-            res.send(newEntry)
-        });
-    }
+        console.log("hi there", req.session.cart);
+        res.send(newEntry)
+    });
 });
 //-----------------CART ROUTES------------------
 
