@@ -2,7 +2,7 @@ extends layout.pug
 
 block content
     .cart
-        table
+        table.table
             thead.thead-dark
                 tr
                     th No. of Items
@@ -24,6 +24,6 @@ block content
                         td
                         td
                             p $#{total}
-        form(action='' method='POST')
-        input(type='submit' value='Checkout')
+        form(action='/pay' method='POST')
+            input(type='submit' value='Checkout')
                         

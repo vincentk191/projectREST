@@ -1,15 +1,26 @@
 const express = require('express');
+const paypal = require('paypal-rest-sdk');
 const router = express.Router();
 const User = require('../controllers').User;
 const Menu = require('../controllers').Menu;
-const Categroy = require('../controllers').Category;
-const bcrypt = require('bcrypt')
+const Category = require('../controllers').Category;
+const bcrypt = require('bcrypt');
+const portID = process.env.PORT || 3000;
+
+const total = obj => {
+    let total = 0;
+        for( let el in obj ) {
+            total += parseFloat(obj[el].price * obj[el].count);
+        }
+    return total;
+};
 
 //-----------------HOME ROUTE------------------
 
 router.get('/', (req, res) => {
     console.log("user", req.session.user);
     console.log("cart", req.session.cart);
+
     let page = {};
     if (!req.session.cart) {
         req.session.cart = {
@@ -17,6 +28,11 @@ router.get('/', (req, res) => {
                 name: "All cheese pizza",
                 price: 11,
                 count: 1
+                // "name": "item",
+                // "sku": "item",
+                // "price": "1.00",
+                // "currency": "USD",
+                // "quantity": 1
             },
             4: {
                 name: "Heineken Beer",
@@ -25,46 +41,47 @@ router.get('/', (req, res) => {
             }
         }
     }
+
     page.user = req.session.user;
+
+    if(page.user) {
+        if(page.user.username === 'Admin') {
+            page.admin = true;
+        }
+    }
+
     page.cart = req.session.cart;
     page.message = req.query.message;
-    function total( obj ) {
-        let total = 0;
-            for( let el in obj ) {
-                console.log(obj[el].price);
-                total += parseFloat(obj[el].price * obj[el].count);
-            }
-        return total;
-    }
 
     page.total = total(page.cart);
 
-    Menu.entries().then(entry => {
-        page.pages = entry.length;
-    })
-
-    Menu.listAll(0).then(menu => {
-        page.menu = menu;
-    })
-
-
-    res.render('home', page);
+    Menu.entries().then(menu => page.menu = menu)
+    .then(() => Menu.listAll(0)
+        .then(menu => page.menu = menu)
+        .then(() => res.render('home', page))
+    );
 });
+//-----------------jQUERY ROUTES------------------
 
+router.get('/jquery/filter/:type', (req,res) => {
+    switch(req.params.type) {
+        case "category":
+            break;
+        case "moderator":
+            break;
+        case "menu":
+    }
+})
+
+router.get('/jquery/clearCart', (req,res) => {
+    req.session.cart = undefined;
+})
 //-----------------CART ROUTES------------------
 
 router.get('/myCart', (req,res) => {
     let page = {};
-    page.cart = req.session.cart
-
-    function total(obj) {
-        let total = 0;
-            for( let el in obj ) {
-                console.log(obj[el].price);
-                total += parseFloat(obj[el].price * obj[el].count);
-            }
-        return total;
-    }
+    page.cart = req.session.cart;
+    page.user = req.session.user;
 
     page.total = total(page.cart);
     console.log(page.total);
@@ -72,54 +89,152 @@ router.get('/myCart', (req,res) => {
     res.render('payment', page)
 })
 
-router.get('/clearCart', (req,res) => {
-    req.session.cart = undefined;
-    res.redirect('/')
+//-----------------PAYPAL ROUTES------------------
+router.post('/pay', (req,res) => {
+    const create_payment_json = {
+        "intent": "sale",
+        "payer": {
+            "payment_method": "paypal"
+        },
+        "redirect_urls": {
+            "return_url": `http://localhost:${portID}/success`,
+            "cancel_url": `http://localhost:${portID}/cancel`
+        },
+        "transactions": [{
+            "item_list": {
+                "items": [{
+                    "name": "Vincent's Bar",
+                    "sku": "1610",
+                    "price": `${total(req.session.cart)}`,
+                    "currency": "EUR",
+                    "quantity": 1
+                }]
+            },
+            "amount": {
+                "currency": "EUR",
+                // "total": "1.00"
+                "total": `${total(req.session.cart)}`
+            },
+            "description": "Checkout Cart"
+        }]
+    };
+
+    paypal.payment.create(create_payment_json, function (error, payment) {
+        if (error) {
+            throw error;
+        } else {
+            console.log("Create Payment Response");
+            console.log(payment);
+            for (var i = 0; i < payment.links.length; i++) {
+                if(payment.links[i].rel === 'approval_url'){
+                    res.redirect(payment.links[i].href);
+                }
+            }
+        }
+    });
 })
 
+router.get('/success', (req,res) => {
+    const payerId = req.query.PayerID;
+    const paymentId = req.query.paymentId;
+
+    const execute_payment_json = {
+        "payer_id": payerId,
+        "transactions": [{
+            "amount": {
+                "currency": "EUR",
+                "total": `${total(req.session.cart)}`
+            }
+        }]
+    };
+
+    paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+        if (error) {
+            throw error;
+        } else {
+            req.session.cart = undefined;
+            res.redirect('/');
+        }
+    });
+});
+
+router.get('/cancel', (req,res) => {
+    res.redirect('/myCart');
+})
 //-----------------PROFILE ROUTES------------------
 
-// ADMIN
-router.get('/admin', (req,res) => {
+// MODERATORS
+router.get('/edit', (req,res) => {
     let page = {};
 
-    if(req.session.user.username === 'Admin'){
-        res.render('admin');
+    if(req.session.user) {
+        if(req.session.user.moderator){
+            page.user = req.session.user;
+            page.admin = req.session.user.username === 'Admin';
+            page.cart = req.session.cart;
+
+            Category.listAll().then(categories => {
+                    page.categories = categories;
+                })
+                .then(() => {
+                    Menu.entries().then(menu => page.menu = menu)
+                    .then(() => User.moderator()
+                        .then(users => {
+                            page.users = users
+                        })
+                        .then(() => res.render('moderator', page))
+                    );
+                })
+        } else {
+            res.redirect('/?message=' + 'You need to be an Admin to access this!')
+        }
     } else {
-        res.redirect('/?message=' + 'You need to be an Admin to access this!')
+        res.redirect('/login')
     }
 })
 
-router.post('/admin/moderator', (req,res) => {
-    if(req.session.user.username === 'Admin'){
-        res.render('/')
+router.post('/edit/:type', (req,res) => {
+    console.log('edit forms here \n');
+    let form = {};
+    if(req.session.user) {
+        if(req.session.user.moderator){
+            switch(req.params.type) {
+                case "category":
+                console.log('category');
+                    form = { name: req.body.category };
+                    Category.create(form);
+                    break;
+
+                case "menu":
+                console.log('menu');
+                    form = {
+                        name: req.body.name,
+                        price: req.body.price,
+                        category: req.body.category
+                    }
+                    Menu.create(form);
+                    break;
+
+                case "moderator":
+                    console.log('moderator');
+                    if(req.session.user.username === 'Admin') {
+                        form = { username: req.body.name };
+                        User.search(form).then(user => User.mod(user));
+                    } else {
+                        res.redirect('/?message=' + 'You do not have permission')
+                    }
+            }
+            res.redirect('/edit')
+        } else {
+            res.redirect('/?message=' + 'You need to be an Admin to access this!')
+        }
+    } else {
+        res.redirect('/login')
     }
-})
-
-router.post('/admin/menu', (req,res) => {
-    if(req.session.user.username === 'Admin'){
-        
-    }
-})
-
-router.post('/admin/category', (req,res) => {
-    if(req.session.user.username === 'Admin'){
-        res.render('/')
-    }
-})
-
-// MODERATOR
-router.get('/moderator', (req,res) => {
-
-})
-
-router.post('/moderator', (req,res) => {
-
 })
 
 // PUBLIC
 router.get('/profile/:id', (req,res) => {
-
 })
 
 //-----------------FORM ROUTES------------------

@@ -32,7 +32,7 @@ module.exports = {
         return User
             .destory({
                 where: {
-                    id: form.id
+                    id: form.name
                 }
             })
     },
@@ -41,9 +41,25 @@ module.exports = {
             .findAll()
     },
     edit(user,form) {
-        return user.update({
-            username: form.username,
-            password: form.password
-        })
+        return user
+            .update({
+                username: form.username,
+                password: form.password
+            });
+    },
+    mod(user) {
+        return user
+            .update({
+                moderator: true
+            })
+    },
+    moderator() {
+        return User
+            .findAll({
+                where: {
+                    moderator: true
+                },
+                order: ['id']
+            })
     }
 };

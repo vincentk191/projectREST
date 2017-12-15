@@ -1,47 +1,35 @@
 const Category = require('../models').Category;
 
 module.exports = {
-    create(req,res) {
+    create(form) {
         return Category
             .create({
-                name:
+                name: form.name
             })
-            .then(user => res.render('', user))
-            .catch(err => res.status(400).redirect(`/?message=${err}`))
     },
-    delete(req,res) {
+    delete(form) {
         return Category
             .destroy({
                 where: {
-
+                    name: form.name
                 }
             })
-            .then(user => res.render('', user))
-            .catch(err => res.status(400).redirect(`/?message=${err}`))
     },
-    listAll(req,res) {
+    listAll() {
         return Category
             .findAll()
-            .then(user => res.render('', user))
-            .catch(err => res.status(400).redirect(`/?message=${err}`))
     },
-    edit(req,res) {
+    edit(form) {
         return Category
             .findOne({
                 where: {
-
+                    id: form.id
                 }
             })
             .then(category => {
-                if(!category){
-
-                }
-
                 return category.update({
-                    name:
-                })
-                .then(user => res.render('', user))
-                .catch(err => res.status(400).redirect(`/?message=${err}`))
+                        name: form.name
+                    })
             })
     }
 };

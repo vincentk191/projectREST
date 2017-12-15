@@ -1,12 +1,9 @@
 * {
     margin: 0;
     padding: 0;
-    background-color: tomato;
-    color: white;
-    font-family: "Arial", serif;
 }
 
-ul.navigation {
+/*ul.navigation {
     text-align: center;
 }
 
@@ -20,13 +17,13 @@ ul.navigation {
 
 #form input {
     position: relative;
-}
+}*/
 
 img {
-    width: 18rem;
+    width: 25rem;
     height: auto;
 }
-
+/*
 .cart table {
     text-align: center;
     border: 1px solid white;
@@ -36,4 +33,4 @@ img {
 
 .cart table tbody {
     border: 1px solid white;
-}
+}*/

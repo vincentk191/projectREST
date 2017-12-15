@@ -1,0 +1,68 @@
+extends layout.pug
+
+block content
+    #admin
+        h1= user.username
+        if admin
+            .moderator
+                h2 Moderators
+                table.table
+                    thead.thead-dark
+                        tr(style='font-size:20px')
+                            th ID
+                            th Moderators
+                    tbody
+                        if users
+                            each moderator in users
+                                tr.table-active
+                                    td 
+                                        p #{moderator.dataValues.id}
+                                    td 
+                                        p #{moderator.dataValues.username}
+                h5 Add moderator
+                form(action='/edit/moderator' method='POST')
+                    input(type='text' name="name" placeholder='Search user' required)
+                    input(type='submit')
+        .editMenu
+            h2 Menu
+            table.table
+                thead.thead-dark
+                    tr(style='font-size:20px')
+                        th No.
+                        th
+                        th Price
+                tbody
+                    if menu
+                        each entry in menu
+                            tr.table-active
+                                td 
+                                    p #{entry.dataValues.id}
+                                td 
+                                    p #{entry.dataValues.name}
+                                td
+                                    p $#{entry.dataValues.price}
+            h5 Add menu
+            form(action='/edit/menu' method='POST')
+                input(type='text' name="name" placeholder='Name' required)
+                input(type='text' name="price" placeholder='Price' required)
+                input(type='text' name="category" placeholder='Category' required)
+                input(type='submit')
+        .editCategory
+            h2 Categories
+            table.table
+                thead.thead-dark
+                    tr(style='font-size:20px')
+                        th No.
+                        th Name
+                tbody
+                    if categories
+                        each category in categories
+                            tr.table-active
+                                td 
+                                    p #{category.dataValues.id}
+                                td 
+                                    p #{category.dataValues.name}
+            h5 Add category
+            form(action='/edit/category' method='POST')
+                input(type='text' name="category" placeholder='Category' required)
+                input(type='submit')

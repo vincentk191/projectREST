@@ -4,9 +4,9 @@ module.exports = {
     create(form) {
         return Menu
             .create({
-                name: req.body.name,
-                price: req.body.price,
-                categoryId: req.body.category
+                name: form.name,
+                price: form.price,
+                categoryId: form.category
             })
     },
     build(form) {
@@ -30,6 +30,19 @@ module.exports = {
     },
     listAll(pageNo) {
         return Menu.findAll({ offset: pageNo, limit: 5 })
+    },
+    search(entry){
+        return Menu
+            .findAll({
+                where: {
+                    name: {
+                        [Op.iLike]: `%${entry}%`
+                    }
+                },
+                order: [
+                    ['name']
+                ]
+            })
     },
     edit(entry) {
         return Menu
