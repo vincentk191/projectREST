@@ -9,24 +9,23 @@ block content
                     th Items
                     th Price
             tbody
-                if cart
-                    each entry in cart
-                        tr.table-active
-                            td 
-                                p X #{entry.count}
-                            td 
-                                p #{entry.name} ($#{entry.price})
-                            td
-                                p  $#{entry.count * entry.price}
-                    tr
+                each entry in cart
+                    tr.table-active
+                        td 
+                            p X #{entry.count}
+                        td 
+                            p #{entry.name} ($#{entry.price})
                         td
-                            p Total
-                        td
-                        td
-                            p $#{total}
+                            p  $#{entry.count * entry.price}
+                tr
+                    td
+                        p Total
+                    td
+                    td
+                p $#{total}
         form(action='/pay' method='POST')
-            if cart
-                input(type='submit' value='Checkout')
+            if cart[0]
+                button.btn-default.btn-sm(type='submit' value='Checkout') Checkout
             else 
-                input(type='submit' value='Checkout' disabled)
+                button.btn-default.btn-sm(type='submit' value='Checkout' disabled) Checkout
                         

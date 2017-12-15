@@ -17,11 +17,11 @@ module.exports = {
                 categoryId: req.body.category
             })
     },
-    delete(menu) {
+    delete(form) {
         return Menu
             .destroy({
                 where: {
-                    name: menu
+                    name: form.name
                 }
             })
     },

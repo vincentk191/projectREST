@@ -27,7 +27,7 @@ const addToCart = (id, obj) => {
 
 router.get('/', (req, res) => {
     console.log("user", req.session.user);
-    console.log("cart", req.session.cart);
+    console.log("message", req.query.message);
 
     let page = {};
 
@@ -45,6 +45,7 @@ router.get('/', (req, res) => {
 
     page.cart = req.session.cart;
     page.message = req.query.message;
+    page.alert = req.query.alert;
 
     page.total = total(page.cart);
 
@@ -56,33 +57,37 @@ router.get('/', (req, res) => {
 });
 //-----------------jQUERY ROUTES------------------
 
-router.get('/jquery/filter/:type', (req,res) => {
-    switch(req.params.type) {
-        case "category":
-            break;
-        case "moderator":
-            break;
-        case "menu":
-    }
-})
-
 router.get('/jquery/clearCart', (req,res) => {
-    req.session.cart = undefined;
-    res.redirect('/')
+    req.session.cart = {};
+    req.session.save(err => res.send(true))
 })
 
 router.get('/jquery/add', (req,res) => {
     const entryId = req.query.input;
     const count = req.query.count;
 
+    console.log("count me", count, req.session.cart);
+
     Menu.findOne(entryId).then(entry => {
         let newEntry = Object.assign(entry.dataValues,{count: count})
         req.session.cart = Object.assign(req.session.cart,{[entryId]: newEntry})
 
         console.log("hi there", req.session.cart);
-        res.send(newEntry)
+        req.session.save(err => res.send(req.session.cart))
     });
 });
+
+router.get('/jquery/username', (req,res) => {
+    const username = req.query.username;
+
+    User.search(username).then(user => {
+        if(!user){
+            res.send(false);
+        } else {
+            res.send(true);
+        }
+    })
+})
 //-----------------CART ROUTES------------------
 
 router.get('/myCart', (req,res) => {
@@ -98,6 +103,7 @@ router.get('/myCart', (req,res) => {
 
 //-----------------PAYPAL ROUTES------------------
 router.post('/pay', (req,res) => {
+    console.log(total(req.session.cart));
     const create_payment_json = {
         "intent": "sale",
         "payer": {
@@ -160,7 +166,7 @@ router.get('/success', (req,res) => {
             throw error;
         } else {
             req.session.cart = undefined;
-            res.redirect('/');
+            res.redirect(`/?alert=<strong>Success!</strong> your order has been made.`);
         }
     });
 });
@@ -173,6 +179,8 @@ router.get('/cancel', (req,res) => {
 // MODERATORS
 router.get('/edit', (req,res) => {
     let page = {};
+    page.message = req.query.message;
+    console.log(page.message);
 
     if(req.session.user) {
         if(req.session.user.moderator){
@@ -201,19 +209,16 @@ router.get('/edit', (req,res) => {
 })
 
 router.post('/edit/:type', (req,res) => {
-    console.log('edit forms here \n');
     let form = {};
     if(req.session.user) {
         if(req.session.user.moderator){
             switch(req.params.type) {
                 case "category":
-                console.log('category');
                     form = { name: req.body.category };
                     Category.create(form);
                     break;
 
                 case "menu":
-                console.log('menu');
                     form = {
                         name: req.body.name,
                         price: req.body.price,
@@ -223,10 +228,51 @@ router.post('/edit/:type', (req,res) => {
                     break;
 
                 case "moderator":
-                    console.log('moderator');
                     if(req.session.user.username === 'Admin') {
-                        form = { username: req.body.name };
-                        User.search(form).then(user => User.mod(user));
+                        let username = req.body.name;
+                        User.search(username).then(user => User.mod(user));
+                    } else {
+                        res.redirect('/?message=' + 'You do not have permission')
+                        return;
+                    }
+            }
+            res.redirect('/edit')
+        } else {
+            res.redirect('/?message=' + 'You need to be an Admin to access this!')
+        }
+    } else {
+        res.redirect('/login')
+    }
+})
+
+router.post('/rmv/:type', (req,res) => {
+    let form = {};
+    if(req.session.user) {
+        if(req.session.user.moderator){
+            switch(req.params.type) {
+                case "category":
+                    form = { name: req.body.category };
+                    Category.delete(form);
+                    break;
+
+                case "menu":
+                    form = {
+                        name: req.body.name,
+                        price: req.body.price,
+                        category: req.body.category
+                    }
+                    Menu.delete(form);
+                    break;
+
+                case "moderator":
+                    if(req.session.user.username === 'Admin') {
+                        let username = req.body.name;
+                        if(username === 'Admin'){
+                            res.redirect('/edit?message=' + 'You cannot unmod an Admin')
+                        } else {
+                            User.search(username).then(user => User.unmod(user));
+                        }
+                        return;
                     } else {
                         res.redirect('/?message=' + 'You do not have permission')
                     }
@@ -248,7 +294,7 @@ router.get('/profile/:id', (req,res) => {
 
 router.get('/logout', (req,res) => {
     req.session.user = undefined;
-    res.redirect('/');
+    req.session.save(err => res.redirect('/'))
 })
 
 router.get('/:form', (req, res) => {
@@ -279,7 +325,7 @@ router.get('/:form', (req, res) => {
     page = Object.assign(page, route);
 
     page.user = req.session.user;
-    page.message = req.query.message;
+    page.alert = req.query.alert;
 
     res.render('form', page);
 })
@@ -295,7 +341,7 @@ router.post('/register', (req, res) => {
         .build(form)
         .validate()
         .then(user => User.create(user).then(() => res.redirect('/login')))
-        .catch(err => res.status(400).redirect(`/register?message=${err.message.replace(/Validation|error|:+/g,"")}`));
+        .catch(err => res.status(400).redirect(`/register?alert=${err.message.replace(/Validation|error|:+/g,"")}`));
 })
 
 router.post('/login', (req, res) => {
@@ -304,8 +350,10 @@ router.post('/login', (req, res) => {
         password: req.body.password
     }
 
+    console.log("hello");
+
     return User
-        .search(form)
+        .search(form.username)
         .then(user => {
             if (user) {
                 bcrypt.compare(form.password, user.password, (err, data) => {
@@ -314,14 +362,14 @@ router.post('/login', (req, res) => {
                     }
                     if (data) {
                         req.session.user = user;
-                        res.redirect('/');
+                        req.session.save(err => res.redirect('/'))
                     } else {
-                        res.status(400).redirect(`/login?message=Invalid Username or Password`)
+                        res.status(400).redirect(`/login?alert=Invalid Username or Password`)
                     }
 
                 });
             } else {
-                res.status(400).redirect(`/login?message=Invalid Username or Password`)
+                res.status(400).redirect(`/login?alert=Invalid Username or Password`)
             }
         })
         .catch(err => res.status(400).redirect(`/login`));

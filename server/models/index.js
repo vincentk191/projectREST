@@ -7,8 +7,8 @@ const Category = sequelize.import('./Category.js');
 const Menu = sequelize.import('./Menu.js');
 const User = sequelize.import('./User.js');
 
-Category.belongsTo(Menu, {onDelete: 'CASCADE' });
-Menu.hasMany(Category, {onDelete: 'CASCADE' });
+Category.hasMany(Menu, {onDelete: 'CASCADE' });
+Menu.belongsTo(Category, {onDelete: 'CASCADE' });
 
 sequelize.sync({ force: false });
 

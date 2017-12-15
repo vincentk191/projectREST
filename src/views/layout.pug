@@ -16,7 +16,7 @@ html
                 .container-fluid
                     ul.nav.navbar-nav
                         li
-                            a(href='/') Home
+                            a(href='/') Home 
                     ul.nav.navbar-nav.navbar-right
                         if !user
                             li
@@ -28,6 +28,8 @@ html
                                     span.glyphicon.glyphicon-log-in
                                     |   Login
                         else 
+                            li 
+                                a #{user.username}
                             li
                                 a(href='/logout') Logout
                             if user.moderator
@@ -35,67 +37,96 @@ html
                                     a(href='/edit') Edit
                         li.dropdown
                             a.dropdown-toggle(data-toggle='dropdown', href='#')
-                                | Cart
+                                | Cart 
                                 if cart 
-                                    span (#{Object.keys(cart).length})
+                                    span#cartItems (#{Object.keys(cart).length})
                                 else 
                                     span (0)
                                 span.caret
-                            ul.dropdown-menu
+                            ul.cart.dropdown-menu
                                 - for (var item in cart)
-                                    li 
-                                        a(href='#') #{cart[item].name} (#{cart[item].count})
+                                    li.myCart
+                                        a(id=cart[item].id) #{cart[item].name} (#{cart[item].count})
                                 li.divider
                                 li
-                                    a(href='/jquery/clearCart') Clear
+                                    a#clearCart Clear
                                 li
                                     a(href='/myCart') Checkout
-        //- .embed-responsive.embed-responsive-4by3
-        //-     img(src='/images/display.jpg')
-        .col-sm-12
+            if alert
+                .alert.alert-success= alert
             if message
-                h3 Error: <em>#{message}</em>
+                .message
+                    .alert.alert-danger= message
             br
             block content
             br
             block footer
                 .footer
-                    h2 Contact Us
+                    h2 Contact Us #{message}
                     p +3132123456
         script.
             $(document).ready(function() {
-                
+
                 /*Cart Function*/
-                
+
                 /*Add*/
                 $('button.add').click(function() {
                     let entryId = $(this).attr('alt');
-                    let count = $(`input#${entryId}`).val();
+                    const count = $(this).closest('td').find('input').val();
                     
                     $.get('/jquery/add', { input: entryId, count: count }, function(data){
+                        $('li.myCart').show();
+                        console.log(Object.keys(data).length);
+                        if($(`a#${entryId}`).text()){
+                            console.log('I exist!' + $(`a#${entryId}`).text())
+                            $(`ul.cart.dropdown-menu a#${entryId}`).text(function(i,entry) {
+                                console.log(entry)
+                                return `${data[entryId].name} (${data[entryId].count})`
+                            })
+                            /*$(`a#${entryId}`).html(`${data[entryId].name} (${data[entryId].count})`);*/
+                        } else {
+                            $('ul.cart.dropdown-menu').prepend(`<li class='myCart'><a id=${entryId}> ${data[entryId].name} (${data[entryId].count}) </a></li>`)
+                        }
+                        $('span#cartItems').html(`(${Object.keys(data).length})`);
                         return;
                     });
+                });
+                
+                /*Clear*/
+                $('a#clearCart').click(function() {
+                    $('li.myCart').hide();
+                    $('span#cartItems').html('(0)')
+                    $.get('/jquery/clearCart', function(){
+                        return;
+                    })
+                });
+                
+                /*Form Function*/
+                
+                /*Passwords Match*/
+                if($('h1.form').text() === 'Register'){
+                    $('input.passwordConf.form-control').keyup(function(){
+                        let confirm = $(this).val();
+                        let password = $('input.password.form-control').val();
+                        
+                        if(confirm !== password){
+                            $('.message').html('Error: <em>Passwords do not match!</em>')
+                        } else {
+                            $('.message').html('')
+                        }
+                    });
                     
-                });
-                
-                /*Reduce*/
-                $('button.reduce').click(function() {
-                   let entryId = $(this).attr('alt')
-                   $('tbody tr').each(function(row,tr){
-                      let form = {
-                         id: $(tr).find('button.close').attr('alt'),
-                         name: $(tr).find('td:eq(0)').text().toLowerCase(),
-                         body: $(tr).find('p.text-primary').text()
-                      }
-                      let content = $(this);
-                      if(rowId == form.id){
-                         content.hide(300);
-                         $.get('/deleted', { input: rowId }, function(data){
-                             console.log(data)
-                            return;
-                         });
-                      }
-                   });
-                });
-                
+                    /*Username check*/
+                    $('input.username.form-control').keyup(function(){
+                        let username = $(this).val();
+                        
+                        $.get('/jquery/username', { username: username }, function(data){
+                            if(data){
+                                $('.message').html('Error: <em>Username is already taken!</em>')
+                            } else {
+                                $('.message').html('')
+                            }
+                        });
+                    });    
+                }
             })

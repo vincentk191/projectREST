@@ -2,17 +2,15 @@ extends layout.pug
 
 block content
     .jumbotron
-        h1 Moe's Bar 
-        h3 <em>@NYCDA B.2 John M, Keynsplein</em>
+        h1 Moe's Tavern 
+        h3 <em>@Springfield, Universal Studios Hollywood</em>
             span
                 .col-md-2
                     .thumbnail
                         a(href='https://goo.gl/maps/yjA2ssh1Evo', target='_blank')
                             img(src='/images/display.jpg', alt='Lights', style='width:100%')
         p
-            | Demons run when a good man goes to war. Night will fall and drown the sun when a
-            good man goes to war. Friendship dies and true love lies. Night will fall and the dark will rise when a good man goes to war. 
-            Demons run but count the cost; the battle's won but the child is lost.
+            | "Moe's Tavern, or simply called Moe's, is the local tavern in Springfield. The bar is named after its owner: Moe."<br>- <em>Moe</em>
     #menu
         ul
             if pages
@@ -32,7 +30,7 @@ block content
                                 p #{entry.id}
                             td 
                                 p.col-md-10 #{entry.name}
-                                input(type="number" id=entry.id)
-                                button.add.col-md-1.btn.btn-default.btn-sm(type='button' alt=entry.id ) +
+                                input(type="number" id=entry.id value=1)
+                                button.add.col-md-1.btn.btn-default.btn-xs(type='button' alt=entry.id ) +
                             td
                                 p $#{entry.price}

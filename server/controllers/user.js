@@ -13,18 +13,22 @@ module.exports = {
         return checkUser;
     },
     create(form) {
+        if(form.username === "Admin"){
+            form.moderator = true;
+        }
         return User
             .create({
                 username: form.username,
                 email: form.email,
-                password: bcrypt.hashSync(form.password, 8)
+                password: bcrypt.hashSync(form.password, 8),
+                moderator: form.moderator
             })
     },
-    search(form) {
+    search(username) {
         return User
             .findOne({
                 where: {
-                    username: form.username
+                    username: username
                 }
             })
     },
@@ -52,6 +56,13 @@ module.exports = {
             .update({
                 moderator: true
             })
+    },
+    unmod(user) {
+        return user
+            .update({
+                moderator: false
+            })
+
     },
     moderator() {
         return User
