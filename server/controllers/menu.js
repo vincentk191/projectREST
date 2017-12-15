@@ -31,6 +31,14 @@ module.exports = {
     listAll(pageNo) {
         return Menu.findAll({ offset: pageNo, limit: 5 })
     },
+    findOne(formId) {
+        return Menu
+            .findOne({
+                where: {
+                    id: formId
+                }
+            })
+    },
     search(entry){
         return Menu
             .findAll({

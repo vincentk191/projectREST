@@ -1,7 +1,7 @@
 doctype html
 html
     head
-        title Vincent's Bar
+        title Moe's Bar
         block header
             meta(charset='utf-8')
             meta(name="viewport" content="width=device-width, initial-scale=1")
@@ -10,6 +10,7 @@ html
             script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
             link(rel='stylesheet', type='text/css', href='css/style.css')
     body
+        .background-image
         block index
             nav.navbar.navbar-inverse
                 .container-fluid
@@ -29,8 +30,6 @@ html
                         else 
                             li
                                 a(href='/logout') Logout
-                            li
-                                a(href=`/profile/${user.id}`) Profile
                             if user.moderator
                                 li
                                     a(href='/edit') Edit
@@ -44,20 +43,59 @@ html
                                 span.caret
                             ul.dropdown-menu
                                 - for (var item in cart)
-                                    li #{cart[item].name}
+                                    li 
+                                        a(href='#') #{cart[item].name} (#{cart[item].count})
+                                li.divider
                                 li
-                                    a(href='/clearCart') Clear
-        if message
-            h3 Error: <em>#{message}</em>
-        br
-        block content
-        br
-        block footer
-            .findUs
-                h2 Where to find us
-                p address
-            .footer
+                                    a(href='/jquery/clearCart') Clear
+                                li
+                                    a(href='/myCart') Checkout
+        //- .embed-responsive.embed-responsive-4by3
+        //-     img(src='/images/display.jpg')
+        .col-sm-12
+            if message
+                h3 Error: <em>#{message}</em>
+            br
+            block content
+            br
+            block footer
+                .footer
+                    h2 Contact Us
+                    p +3132123456
         script.
             $(document).ready(function() {
-
+                
+                /*Cart Function*/
+                
+                /*Add*/
+                $('button.add').click(function() {
+                    let entryId = $(this).attr('alt');
+                    let count = $(`input#${entryId}`).val();
+                    
+                    $.get('/jquery/add', { input: entryId, count: count }, function(data){
+                        return;
+                    });
+                    
+                });
+                
+                /*Reduce*/
+                $('button.reduce').click(function() {
+                   let entryId = $(this).attr('alt')
+                   $('tbody tr').each(function(row,tr){
+                      let form = {
+                         id: $(tr).find('button.close').attr('alt'),
+                         name: $(tr).find('td:eq(0)').text().toLowerCase(),
+                         body: $(tr).find('p.text-primary').text()
+                      }
+                      let content = $(this);
+                      if(rowId == form.id){
+                         content.hide(300);
+                         $.get('/deleted', { input: rowId }, function(data){
+                             console.log(data)
+                            return;
+                         });
+                      }
+                   });
+                });
+                
             })

@@ -25,5 +25,8 @@ block content
                         td
                             p $#{total}
         form(action='/pay' method='POST')
-            input(type='submit' value='Checkout')
+            if cart
+                input(type='submit' value='Checkout')
+            else 
+                input(type='submit' value='Checkout' disabled)
                         

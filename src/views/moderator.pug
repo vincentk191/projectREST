@@ -21,7 +21,7 @@ block content
                                         p #{moderator.dataValues.username}
                 h5 Add moderator
                 form(action='/edit/moderator' method='POST')
-                    input(type='text' name="name" placeholder='Search user' required)
+                    input(type='text' name="name" placeholder='Search user' required autocomplete="off")
                     input(type='submit')
         .editMenu
             h2 Menu
@@ -43,9 +43,9 @@ block content
                                     p $#{entry.dataValues.price}
             h5 Add menu
             form(action='/edit/menu' method='POST')
-                input(type='text' name="name" placeholder='Name' required)
-                input(type='text' name="price" placeholder='Price' required)
-                input(type='text' name="category" placeholder='Category' required)
+                input(type='text' name="name" placeholder='Name' required autocomplete="off")
+                input(type='text' name="price" placeholder='Price' required autocomplete="off")
+                input(type='text' name="category" placeholder='Category' required autocomplete="off")
                 input(type='submit')
         .editCategory
             h2 Categories
@@ -64,5 +64,5 @@ block content
                                     p #{category.dataValues.name}
             h5 Add category
             form(action='/edit/category' method='POST')
-                input(type='text' name="category" placeholder='Category' required)
+                input(type='text' name="category" placeholder='Category' required autocomplete="off")
                 input(type='submit')

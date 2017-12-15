@@ -7,6 +7,8 @@ module.exports = (sequelize, DataTypes) => {
             unique: true,
             allowNull: false
         }
+    },{
+        timestamps: false
     })
 
     return Category;

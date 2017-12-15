@@ -15,6 +15,14 @@ const total = obj => {
     return total;
 };
 
+const addToCart = (id, obj) => {
+    for( let el in obj ) {
+        if(obj[el].id === id) {
+            obj[el].count++;
+        }
+    }
+};
+
 //-----------------HOME ROUTE------------------
 
 router.get('/', (req, res) => {
@@ -22,24 +30,9 @@ router.get('/', (req, res) => {
     console.log("cart", req.session.cart);
 
     let page = {};
-    if (!req.session.cart) {
-        req.session.cart = {
-            3: {
-                name: "All cheese pizza",
-                price: 11,
-                count: 1
-                // "name": "item",
-                // "sku": "item",
-                // "price": "1.00",
-                // "currency": "USD",
-                // "quantity": 1
-            },
-            4: {
-                name: "Heineken Beer",
-                price: 4,
-                count: 4
-            }
-        }
+
+    if(!req.session.cart){
+        req.session.cart = {};
     }
 
     page.user = req.session.user;
@@ -75,7 +68,34 @@ router.get('/jquery/filter/:type', (req,res) => {
 
 router.get('/jquery/clearCart', (req,res) => {
     req.session.cart = undefined;
+    res.redirect('/')
 })
+
+router.get('/jquery/add', (req,res) => {
+    const entryId = req.query.input;
+    const count = req.query.count;
+
+    console.log("jquery cart", req.session.cart);
+
+    if (req.session.cart[`${entryId}`]) {
+        // addToCart(entryId,req.session.cart);
+        //
+        // let newEntry = Object.assign(req.session.cart,{count: count})
+        //
+        // req.session.cart = Object.assign(req.session.cart,{[entryId]: newEntry})
+        req.session.cart[`${entryId}`].count++;
+
+        console.log("added to Cart", req.session.cart);
+    } else {
+        Menu.findOne(entryId).then(entry => {
+            let newEntry = Object.assign(entry.dataValues,{count: count})
+            req.session.cart = Object.assign(req.session.cart,{[entryId]: newEntry})
+
+            console.log("hi there", req.session.cart);
+            res.send(newEntry)
+        });
+    }
+});
 //-----------------CART ROUTES------------------
 
 router.get('/myCart', (req,res) => {
