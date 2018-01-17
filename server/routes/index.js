@@ -64,11 +64,18 @@ router.get('/jquery/clearCart', (req,res) => {
 
 router.get('/jquery/add', (req,res) => {
     const entryId = req.query.input;
-    const count = req.query.count;
+    let count = req.query.count;
 
-    console.log("count me", count, req.session.cart);
+    console.log("count me", req.session.cart);
+
+    for (let entry in req.session.cart) {
+        if (entry === entryId) {
+            count = +req.session.cart[entry].count + +count;
+        }
+    }
 
     Menu.findOne(entryId).then(entry => {
+
         let newEntry = Object.assign(entry.dataValues,{count: count})
         req.session.cart = Object.assign(req.session.cart,{[entryId]: newEntry})
 

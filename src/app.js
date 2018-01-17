@@ -17,8 +17,8 @@ app.use(bodyParser.urlencoded({
 
 paypal.configure({
   'mode': 'sandbox', //sandbox or live
-  'client_id': 'AZGLmnJSzE9IydzugsfSBGVMk32LZuzqofZ211uT7tPyU4zB0PIFFluGK8g4OCtpyPGvAi7NRy9dUV6X',
-  'client_secret': 'ENWNjQvCp_IRfUBGkrGXf2G9LBbkZvacW6kUKEvKKPUIwHD_gXipIhv_SO4d7g8Nc-PdQNeAsm-dmfic'
+  'client_id': 'AZGLmnJSzE9IydzugsfSBGVMk32LZuzqofZ211uT7tPyU4zB0PIFFluGK8g4OCtpyPGvAi7NRy9dUV6X', // replace with your own
+  'client_secret': 'ENWNjQvCp_IRfUBGkrGXf2G9LBbkZvacW6kUKEvKKPUIwHD_gXipIhv_SO4d7g8Nc-PdQNeAsm-dmfic' // replace with your own
 });
 
 //-----------------SESSION STORE-------------------
