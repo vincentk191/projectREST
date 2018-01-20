@@ -24,7 +24,7 @@ block content
                     td
                 p $#{total}
         form(action='/pay' method='POST')
-            if cart[0]
+            if total
                 button.btn-default.btn-sm(type='submit' value='Checkout') Checkout
             else 
                 button.btn-default.btn-sm(type='submit' value='Checkout' disabled) Checkout

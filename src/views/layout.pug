@@ -38,20 +38,18 @@ html
                         li.dropdown
                             a.dropdown-toggle(data-toggle='dropdown', href='#')
                                 | Cart 
-                                if cart 
-                                    span#cartItems (#{Object.keys(cart).length})
-                                else 
-                                    span (0)
+                                span#cartItems (#{Object.keys(cart).length})
                                 span.caret
                             ul.cart.dropdown-menu
                                 - for (var item in cart)
                                     li.myCart
-                                        a(id=cart[item].id) #{cart[item].name} (#{cart[item].count})
+                                        a.items(id=cart[item].id) #{cart[item].name} (#{cart[item].count})
                                 li.divider
-                                li
-                                    a#clearCart Clear
-                                li
-                                    a(href='/myCart') Checkout
+                                if cart
+                                    li
+                                        a#clearCart Clear
+                                    li
+                                        a(href='/myCart') Checkout
             if alert
                 .alert.alert-success= alert
             if message
@@ -75,12 +73,10 @@ html
                     const count = $(this).closest('td').find('input').val();
                     
                     $.get('/jquery/add', { input: entryId, count: count }, function(data){
-                        $('li.myCart').show();
+                        $(`a#${entryId}`).show();
                         console.log(Object.keys(data).length);
                         if($(`a#${entryId}`).text()){
-                            console.log('I exist!' + $(`a#${entryId}`).text())
                             $(`ul.cart.dropdown-menu a#${entryId}`).text(function(i,entry) {
-                                console.log(entry)
                                 return `${data[entryId].name} (${data[entryId].count})`
                             })
                             /*$(`a#${entryId}`).html(`${data[entryId].name} (${data[entryId].count})`);*/
@@ -94,7 +90,7 @@ html
                 
                 /*Clear*/
                 $('a#clearCart').click(function() {
-                    $('li.myCart').hide();
+                    $('li.myCart').html("");
                     $('span#cartItems').html('(0)')
                     $.get('/jquery/clearCart', function(){
                         return;
