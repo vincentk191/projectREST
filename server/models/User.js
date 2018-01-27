@@ -1,5 +1,3 @@
-const model = require('./');
-
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
         username: {
@@ -9,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
             validate: {
                 len: {
                     args: 5,
-                    msg: "Username must be 5 characters in length"
+                    msg: 'Username must be 5 characters in length'
                 }
             }
         },
@@ -19,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             unique: true,
             validate: {
                 isEmail: {
-                    msg: "Please enter a valid email address"
+                    msg: 'Please enter a valid email address'
                 }
             }
         },
@@ -29,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
             validate: {
                 len: {
                     args: 8,
-                    msg: "Password must be 8 characters in length"
+                    msg: 'Password must be 8 characters in length'
                 }
             }
         },
@@ -42,4 +40,4 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     return User;
-}
+};

@@ -6,4 +6,4 @@ module.exports = {
     Menu,
     User,
     Category
-}
+};

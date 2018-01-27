@@ -1,5 +1,3 @@
-const model = require('./');
-
 module.exports = (sequelize, DataTypes) => {
     const Category = sequelize.define('Category', {
         name: {
@@ -7,9 +5,10 @@ module.exports = (sequelize, DataTypes) => {
             unique: true,
             allowNull: false
         }
-    },{
+    },
+    {
         timestamps: false
-    })
+    });
 
     return Category;
-}
+};

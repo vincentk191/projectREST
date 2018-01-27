@@ -1,5 +1,3 @@
-const model = require('./');
-
 module.exports = (sequelize, DataTypes) => {
     const Menu = sequelize.define('Menu', {
         name: {
@@ -11,9 +9,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false
         }
-    },{
+    },
+    {
         timestamps: false
     });
 
-    return Menu
-}
+    return Menu;
+};

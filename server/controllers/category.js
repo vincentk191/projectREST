@@ -5,7 +5,7 @@ module.exports = {
         return Category
             .create({
                 name: form.name
-            })
+            });
     },
     delete(form) {
         return Category
@@ -13,11 +13,11 @@ module.exports = {
                 where: {
                     name: form.name
                 }
-            })
+            });
     },
     listAll() {
         return Category
-            .findAll()
+            .findAll();
     },
     edit(form) {
         return Category
@@ -29,7 +29,7 @@ module.exports = {
             .then(category => {
                 return category.update({
                         name: form.name
-                    })
-            })
+                    });
+            });
     }
 };

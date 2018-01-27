@@ -28,20 +28,20 @@ app.use(session({
       checkExpirationInterval: 15 * 60 * 1000, // The interval at which to cleanup expired sessions in milliseconds.
       expiration: 60 * 60 * 1000 // The maximum age (in milliseconds) of a valid session.
    }),
-   secret: "safe",
+   secret: 'safe',
    saveUnitialized: false,
    resave: false
-}))
+}));
 
 //--------------------ROUTES----------------------
 app.set('view engine', 'pug');
 
-app.set('views', __dirname + '/views/');
+app.set('views', `${__dirname}/views/`);
 
 app.use(express.static('public'));
 
 app.use(require('../server/routes'));
 
 app.listen(portID, () => {
-   console.log(`Server's working just fine on port 3000!`);
+   console.log('Server\'s working just fine on port 3000!');
 });
