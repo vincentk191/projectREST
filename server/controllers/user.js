@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 module.exports = {
     build(form) {
-        console.log("cy@");
+        console.log('cy@');
         const checkUser = User.build({
             username: form.username,
             password: form.password,
@@ -13,7 +13,7 @@ module.exports = {
         return checkUser;
     },
     create(form) {
-        if(form.username === "Admin"){
+        if (form.username === 'Admin') {
             form.moderator = true;
         }
         return User
@@ -22,15 +22,15 @@ module.exports = {
                 email: form.email,
                 password: bcrypt.hashSync(form.password, 8),
                 moderator: form.moderator
-            })
+            });
     },
     search(username) {
         return User
             .findOne({
                 where: {
-                    username: username
+                    username
                 }
-            })
+            });
     },
     delete(form) {
         return User
@@ -38,13 +38,13 @@ module.exports = {
                 where: {
                     id: form.name
                 }
-            })
+            });
     },
     listAll() {
         return User
-            .findAll()
+            .findAll();
     },
-    edit(user,form) {
+    edit(user, form) {
         return user
             .update({
                 username: form.username,
@@ -55,13 +55,13 @@ module.exports = {
         return user
             .update({
                 moderator: true
-            })
+            });
     },
     unmod(user) {
         return user
             .update({
                 moderator: false
-            })
+            });
 
     },
     moderator() {
@@ -71,6 +71,6 @@ module.exports = {
                     moderator: true
                 },
                 order: ['id']
-            })
+            });
     }
 };

@@ -1,4 +1,5 @@
 const Menu = require('../models').Menu;
+const Op = require('sequelize').Op;
 
 module.exports = {
     create(form) {
@@ -7,15 +8,15 @@ module.exports = {
                 name: form.name,
                 price: form.price,
                 categoryId: form.category
-            })
+            });
     },
-    build(form) {
+    build() {
         return Menu
             .build({
                 name: req.body.name,
                 price: req.body.price,
                 categoryId: req.body.category
-            })
+            });
     },
     delete(form) {
         return Menu
@@ -23,13 +24,13 @@ module.exports = {
                 where: {
                     name: form.name
                 }
-            })
+            });
     },
     entries() {
         return Menu.findAll();
     },
     listAll(pageNo) {
-        return Menu.findAll({ offset: pageNo, limit: 5 })
+        return Menu.findAll({ offset: pageNo, limit: 5 });
     },
     findOne(formId) {
         return Menu
@@ -37,9 +38,9 @@ module.exports = {
                 where: {
                     id: formId
                 }
-            })
+            });
     },
-    search(entry){
+    search(entry) {
         return Menu
             .findAll({
                 where: {
@@ -50,7 +51,7 @@ module.exports = {
                 order: [
                     ['name']
                 ]
-            })
+            });
     },
     edit(entry) {
         return Menu
@@ -64,7 +65,7 @@ module.exports = {
                         name: entry.name,
                         price: entry.price,
                         categoryId: entry.categoryId
-                    })
-            })
+                    });
+            });
     }
 };
