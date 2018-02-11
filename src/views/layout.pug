@@ -55,8 +55,8 @@ html
             if message
                 .message
                     .alert.alert-danger= message
-            br
             block content
+            br
             br
             block footer
                 .footer
@@ -106,7 +106,7 @@ html
                         let password = $('input.password.form-control').val();
                         
                         if(confirm !== password){
-                            $('.message').html('Error: <em>Passwords do not match!</em>')
+                            $('.message').html('<em>Passwords do not match!</em>')
                         } else {
                             $('.message').html('')
                         }

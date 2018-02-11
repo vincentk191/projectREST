@@ -16,6 +16,20 @@ block content
             if pages
                 each page in pages
                     li= page
+        ul.breadcrumb#subnav
+            li
+                a#search(href='#') Search
+            li
+                a#filter(href='#') Filter
+            li
+                a#surprise(href='#') <em>Surprise Me!</em>
+        .special.col-md-6
+            form
+                .input-group
+                    input.form-control(type='text', placeholder='')
+                    .input-group-btn
+                        button.btn.btn-default(type='submit')
+                            i.glyphicon.glyphicon-search
         table.table
             thead.thead-dark
                 tr(style='font-size:20px')
@@ -29,8 +43,43 @@ block content
                             td 
                                 p #{entry.id}
                             td 
-                                p.col-md-10 #{entry.name}
+                                p.col-md-2 #{entry.name}
+                                button.add.col-md-2.btn.btn-default.btn-xs(type='button' alt=entry.id ) Add to cart
                                 input(type="number" id=entry.id value=1)
-                                button.add.col-md-1.btn.btn-default.btn-xs(type='button' alt=entry.id ) +
                             td
                                 p $#{entry.price}
+    script.
+        $(document).ready(function() {
+            $('.special').hide();
+            /*Subnav for menu*/
+            /*var list = document.getElementById("subnav").getElementsByTagName("li");
+            console.log(list);
+            for(var i = 0; i < list.length; i++) {
+                console.log(`a#${list[i].lastChild.id}`)
+                $(`a#${list[i].lastChild.id}`).onclick = function() {
+                    console.log('This is le breadcrumb');
+                    return false;
+                }
+            }*/
+            document.getElementById("search").onclick = function() {
+                console.log('This is le search');
+                $('input.form-control').attr("placeholder", "Search");
+                $('.special').show(300)
+                return false;
+            };
+            
+            document.getElementById("filter").onclick = function() {
+                console.log('This is le filter');
+                $('input.form-control').attr("placeholder", "Filter")
+                $('.special').show(300)
+                return false;
+            };
+            
+            document.getElementById("surprise").onclick = function() {
+                console.log('This is le surprise');
+                $('input.form-control').attr("placeholder", "Surprise")
+                $('.special').show(300)
+                return false;
+            };
+            
+        })
